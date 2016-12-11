@@ -64,10 +64,10 @@ dat_DTMfrq_episode176 <- dat.myDTM[which(dat.myDTM$episode_id == 176), ] %>%
   group_by (word) %>%
   summarise(num=n()) %>%
   arrange(desc(num))
-wordcloud(dat_DTMfrq_episode176$word, dat_DTMfrq_episode176$num, min.freq = 300, 
+wordcloud(dat_DTMfrq_episode176$word, dat_DTMfrq_episode176$num,
           colors = brewer.pal(6,"Dark2"))
 text(x = 0.5, y = 1 , "Wordcloud for Episode 176")
-# episode 176
+# episode 179
 dat_DTMfrq_episode179 <- dat.myDTM[which(dat.myDTM$episode_id == 179), ] %>% 
   gather(word, frequency, -spoken_words, -spoken_words_clean, -episode_id,
          -speaking_line, -character_id, -location_id) %>%
