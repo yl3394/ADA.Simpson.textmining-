@@ -2,29 +2,60 @@
 title: "report_tm"
 author: "Yanjin Li"
 date: "12/11/2016"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+# Load packages
+library(dplyr)
+library(DBI)
+library(tidyr)
+# For text mining
+library(NLP)
+library(tm)
+library(SnowballC)
+library(ggplot2); theme_set(theme_bw())
+
+dat.scripts <- readRDS("/Users/yanjin1993/GitHub/ADA.Simpson.textmining-/data/dat_scripts.rds")
 ```
 
-## R Markdown
+## Section #: Text Mining Procedures 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+Start by saving your text files in a folder titled: “texts” This will be the “corpus” (body) of texts you are mining. Here, we can inspect contents of the corpus we just generated. 
 
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+```{r, echo=TRUE}
+# convert multibyte to bibyte   
+dat.scripts$spoken_words <- iconv(enc2utf8(dat.scripts$spoken_words),sub="byte")
+dat.scripts$word_count <- ifelse(!is.na(dat.scripts$word_count), as.numeric(dat.scripts$word_count), 0)
 
-```{r cars}
-summary(cars)
+# tansform script text lines into corpus (separated text files)
+myCorpus <- Corpus(VectorSource(dat.scripts$spoken_words))
+# check original text data's meta-data
+inspect(myCorpus[1])
 ```
 
-## Including Plots
+Once all corpus files prepared, text mining process can be initiated. We will present a text mining example along with explanations to the text mining procedures. The original text:
 
-You can also embed plots, for example:
+> \textit{What does your phrase "17 pieces of Tahitian South Sea pearl" mean? I am very interested in this necklace - is this your best price?}
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+
+  ### Convert to lowercase:
+```{r}
+myCorpus <- tm_map(myCorpus, content_transformer(tolower))
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+> \textit{what does your phrase "17 pieces of tahitian south sea pearl" mean? i am very interested in this necklace - is this your best price?}
+
+  ### Removing punctuation:
+  
+  
+  Since computer cannot actually read meaning of punctuations. Punctuation and other special characters only look like more words to the computer and R. Use the following to methods to remove them from the text. 
+  
+  In some cases, if necesasry, such as when working with emails, we can also remove special characters.This list has been customized to remove punctuation that you commonly find in emails. You can customize what is removed by changing them as you see fit, to meet your own unique needs.
+
+```{r}
+
+```
+
+
+
