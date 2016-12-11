@@ -111,14 +111,6 @@ plot_ly(data, x= ~season, y= ~bart, type='bar', name= 'Bart Simpson', marker=lis
          yaxis=list(title="Propotion"),
          title = 'Propotion of show’s total dialogue by season')
 
-# Sentiment
-
-#corpus= Corpus(VectorSource(dat_bart1$spoken_words))
-#corpus=tm_map(corpus,removePunctuation)
-#corpus=tm_map(corpus,content_transformer(tolower))
-#corpus=tm_map(corpus,removeNumbers)
-#corpus=tm_map(corpus,stripWhitespace)
-#corpus=tm_map(corpus,removeWords, stopwords('english'))
 
 
 # Sentiment for Marge
