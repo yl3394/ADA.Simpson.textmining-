@@ -1,0 +1,34 @@
+simpson <- read.csv("/Users/feizhao/Desktop/Analysis/simpsons_episodes.csv", header = T)
+simpson$us_viewers_in_millions <- as.numeric(as.character(simpson$us_viewers_in_millions))
+sim <- simpson[,c(3,8)]
+library(xts)
+library(plotly)
+simts <- xts(sim[,-1], order.by=as.Date(sim[,1], "%m/%d/%Y"))
+plot(simts, main = "Historical US Viewers for the Simpsons", ylab = "US Viewers(Millions)")
+#fit time series model
+library(plotly)
+library(PerformanceAnalytics)
+log_view <- log(simts)
+plot(log_view, main = "Log US Viewers for the Simpsons", type = "l")
+t <- seq(1, length(log_view), by=1)
+t2 <- t ^ 2
+fit1 <- lm(log_view~t+t2)
+summary(fit1)
+fit2 <- lm(log_view~t)
+summary(fit2)
+par(mfrow=c(2,2))
+par(mfrow=c(1,1))
+plot(diff(simts), main = "Defference of Log US Viewers for the Simpsons")
+fit3 <- arima(log(simpson$us_viewers_in_millions), order = c(1,1,1))
+fore <- predict(fit3, n.ahead = 5)
+U <- fore$pred + 2*fore$se
+L <- fore$pred - 2*fore$se
+ts.plot(diff(log(ts(sim$us_viewers_in_millions))), fore$pred, U, L, col=c(1,2,4,4), lty=c(1,1,2,2))
+legend("topleft", c("Actual", "Forecast", "Error Bounds (95% Confidence)"), col = c(1,2,4), lty = c(1,1,2) , bty = "n")
+tsdiag(fit3)
+Box.test(fit3$residuals, lag = 1)
+view.pred <- predict(fit3, n.ahead = 5)
+view.pred
+AIC(fit1)
+AIC(fit2)
+AIC(fit3)
